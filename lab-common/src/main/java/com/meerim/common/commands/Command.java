@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * This is an abstract class for all the commands.
  */
-public abstract class Command{
+public abstract class Command implements Serializable {
 
     protected final Serializable arg;
     private final String name;

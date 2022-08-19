@@ -107,7 +107,7 @@
             <property name="max" value="15"/>
         </module>
         <module name="MethodLength">
-            <property name="max" value="40"/>
+            <property name="max" value="60"/>
         </module>
         <module name="ParameterNumber">
             <property name="max" value="11"/>
@@ -156,20 +156,19 @@
             <property name="setterCanReturnItsClass" value="true"/>
         </module>
         <module name="InnerAssignment"/>
-        <module name="MagicNumber"/>
         <module name="MissingSwitchDefault"/>
         <module name="MultipleVariableDeclarations"/>
         <module name="NestedForDepth">
-            <property name="max" value="2"/>
+            <property name="max" value="1000000"/>
         </module>
         <module name="NestedTryDepth"/>
         <module name="NestedIfDepth">
-            <property name="max" value="2"/>
+            <property name="max" value="100000"/>
         </module>
         <module name="OneStatementPerLine"/>
         <module name="ParameterAssignment"/>
         <module name="ReturnCount">
-            <property name="max" value="4"/>
+            <property name="max" value="1000000"/>
             <property name="maxForVoid" value="3"/>
         </module>
         <module name="SimplifyBooleanExpression"/>

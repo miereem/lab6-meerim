@@ -9,11 +9,17 @@ import com.meerim.common.util.FileManager;
 import com.meerim.server.util.CSVMapper;
 import com.meerim.common.util.ObjectWrapper;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.*;
+import java.nio.channels.ClosedChannelException;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -28,7 +34,7 @@ public class ServerApp {
     private final int capacity = 1000;
 
     public ServerApp(CollectionManager collectionManager, FileManager fileManager) {
-        logger.setLevel(Level.CONFIG);
+        logger.setLevel(Level.INFO);
         this.in = new BufferedReader(new InputStreamReader(System.in));
         this.collectionManager = collectionManager;
         this.fileManager = fileManager;
@@ -70,8 +76,8 @@ public class ServerApp {
     public Command receive(SelectionKey selectionKey) throws IOException, ClassNotFoundException {
         SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
         ByteBuffer buf = readInBuf(socketChannel);
-        Command request = (Command) ObjectWrapper.deserialize(buf);
-        System.out.println("Request: " + request.getName());
+        Command request = ObjectWrapper.deserializeserver(buf);
+        //System.out.println("Request: " + request.getName());
         buf.clear();
         return request;
     }
@@ -80,22 +86,18 @@ public class ServerApp {
     //Модуль обработки полученных команд.
     public void handle(Command request, SelectionKey selectionKey) {
         CommandResult result = request.execute(collectionManager);
-        System.out.println(result);
         selectionKey.attach(result);
         selectionKey.interestOps(SelectionKey.OP_WRITE);
     }
 
     //Модуль отправки ответов клиенту.
-    public boolean send(SelectionKey selectionKey) {
-        try {
+    public boolean send(SelectionKey selectionKey) throws IOException {
             selectionKey.interestOps(SelectionKey.OP_WRITE);
+            ByteBuffer byteBuffer = ObjectWrapper.serialize(selectionKey.attachment());
             SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
-            ObjectOutputStream oos = new ObjectOutputStream(socketChannel.socket().getOutputStream());
-            oos.writeObject(selectionKey.attachment());
-            oos.close();
-        } catch (IOException e) {
-            logger.info("Couldn't send the result to the client.");
-        }
+            socketChannel.write(byteBuffer);
+            selectionKey.interestOps(SelectionKey.OP_READ);
+            byteBuffer.clear();
         return !"exit".equals(selectionKey.attachment());
     }
 
@@ -106,7 +108,7 @@ public class ServerApp {
             if (count == 0) {
                 continue;
             }
-            Set<SelectionKey> keySet = selector.selectedKeys(); // unreachable code
+            Set<SelectionKey> keySet = selector.selectedKeys();
             Iterator<SelectionKey> iterator = keySet.iterator();
             while (iterator.hasNext()) {
                 SelectionKey selectionKey = iterator.next();
@@ -116,7 +118,7 @@ public class ServerApp {
                 }
                 if (selectionKey.isValid() && selectionKey.isReadable()) {
                     try {
-                        handle(receive(selectionKey), selectionKey); // todo mistake here
+                        handle(receive(selectionKey), selectionKey); //
                     } catch (ClassNotFoundException | IOException e) {
                         logger.info("The client was disconnected" + selectionKey.channel());
                         selectionKey.cancel();

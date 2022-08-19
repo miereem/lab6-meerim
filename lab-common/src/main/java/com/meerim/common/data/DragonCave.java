@@ -2,9 +2,10 @@ package com.meerim.common.data;
 
 import com.opencsv.bean.CsvBindByName;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class DragonCave implements Comparable<DragonCave> {
+public class DragonCave implements Comparable<DragonCave>, Serializable {
     @CsvBindByName
     private float numberOfTreasures; //Значение поля должно быть больше 0
 

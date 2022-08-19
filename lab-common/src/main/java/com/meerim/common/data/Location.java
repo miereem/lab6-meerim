@@ -1,8 +1,9 @@
 package com.meerim.common.data;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Location {
+public class Location implements Serializable {
 
     private final float x;
     private final long y;

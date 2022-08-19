@@ -7,8 +7,8 @@ import com.meerim.common.util.CollectionManager;
 
 public class MinByIDCommand extends Command {
 
-    public MinByIDCommand(String arg) {
-        super(arg,"min_by_id");
+    public MinByIDCommand() {
+        super("", "min_by_id");
     }
 
     @Override

@@ -10,7 +10,7 @@ public class SaveCommand extends Command {
     private final FileManager fileManager;
 
     public SaveCommand(FileManager fileManager) {
-        super("","save");
+        super("", "save");
         this.fileManager = fileManager;
     }
 

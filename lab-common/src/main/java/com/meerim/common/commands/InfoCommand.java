@@ -8,7 +8,7 @@ import com.meerim.common.util.CollectionManager;
 public class InfoCommand extends Command {
 
     public InfoCommand() {
-        super("","info");
+        super("", "info");
     }
 
     @Override

@@ -7,7 +7,7 @@ import com.meerim.common.data.DragonCave;
 import com.meerim.common.data.DragonType;
 import com.meerim.common.data.Coordinates;
 
-import java.util.Scanner;
+import java.io.IOException;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -90,7 +90,7 @@ public class DragonMaker {
                          boolean nullable) {
             outputManager.println(askMessage);
             String input;
-            T value;
+            T value = null;
             do {
                 try {
                     input = userInputManager.nextLine();
@@ -103,6 +103,8 @@ public class DragonMaker {
                 } catch (IllegalArgumentException e) {
                     outputManager.println(errorMessage);
                     continue;
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
                 if (predicate.test(value)) {
                     return value;

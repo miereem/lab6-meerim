@@ -1,8 +1,5 @@
 package com.meerim.common.data;
 
-
-import com.meerim.common.util.CollectionManager;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;

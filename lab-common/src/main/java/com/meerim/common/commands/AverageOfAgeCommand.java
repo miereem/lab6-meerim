@@ -8,7 +8,7 @@ public class AverageOfAgeCommand extends Command {
 
 
     public AverageOfAgeCommand() {
-        super("","average_of_age");
+        super("", "average_of_age");
     }
 
     @Override

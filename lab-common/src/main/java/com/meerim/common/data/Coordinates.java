@@ -3,9 +3,10 @@ package com.meerim.common.data;
 import com.opencsv.bean.CsvBindByName;
 
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Coordinates {
+public class Coordinates implements Serializable {
     @CsvBindByName
     private Integer x; //> -896
     @CsvBindByName

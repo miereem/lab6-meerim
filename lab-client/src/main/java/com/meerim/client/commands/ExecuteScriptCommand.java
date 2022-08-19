@@ -1,14 +1,12 @@
 package com.meerim.client.commands;
 
-import com.meerim.common.commands.Command;
 import com.meerim.common.commands.CommandResult;
-import com.meerim.common.util.CollectionManager;
 import com.meerim.common.util.UserInputManager;
 import java.io.File;
 import java.io.IOException;
 
 
-public class ExecuteScriptCommand{
+public class ExecuteScriptCommand {
 
     private final String arg;
 
@@ -24,7 +22,7 @@ public class ExecuteScriptCommand{
         } catch (IOException e) {
             new CommandResult("There was a problem opening the file. Check if it is available and you have written it in the command arg correctly.");
         } catch (UnsupportedOperationException e) {
-           new CommandResult( e.getMessage());
+           new CommandResult(e.getMessage());
         }
     }
 }

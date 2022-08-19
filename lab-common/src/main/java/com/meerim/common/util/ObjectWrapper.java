@@ -1,7 +1,6 @@
 package com.meerim.common.util;
 
 import com.meerim.common.commands.Command;
-import com.meerim.common.commands.CommandResult;
 
 import java.util.logging.Logger;
 
@@ -37,16 +36,29 @@ public final class ObjectWrapper {
         return byteBuffer;
     }
 
-    public static Object deserialize(ByteBuffer byteBuffer) throws IOException, ClassNotFoundException {
+    public static Command deserializeserver(ByteBuffer byteBuffer) throws IOException, ClassNotFoundException {
         byteBuffer.flip();
         try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteBuffer.array())) {
             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-            Object response = (Object) objectInputStream.readObject();
+            objectInputStream.close();
+            LOGGER.fine("object was deserialized");
+            return (Command) objectInputStream.readObject();
+        }
+    }
+    public static Object deserialize(ByteBuffer byteBuffer) throws IOException, ClassNotFoundException {
+        byteBuffer.flip();
+        Object response = null;
+        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteBuffer.array())) {
+            ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+            response = objectInputStream.readObject();
             objectInputStream.close();
             LOGGER.fine("object was deserialized");
             return response;
         }
+
+
+        }
     }
 
-    }
+
 

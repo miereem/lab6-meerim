@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -11,37 +12,28 @@ import java.util.Stack;
  * This class is used for all the user input: keyboard and script execution
  */
 public class UserInputManager {
-    private Scanner scanner;
+    private final Scanner scanner;
     private final Stack<BufferedReader> currentFilesReaders = new Stack<>();
     private final Stack<File> currentFiles = new Stack<>();
 
-    public UserInputManager(Scanner scanner) {
-        this.scanner = scanner;
+    public UserInputManager(InputStream inputStream) {
+        this.scanner = new Scanner(inputStream);
     }
 
-    public String nextLine() {
-        if (currentFilesReaders.isEmpty()) {
+
+    public String nextLine() throws IOException {
+        if (!currentFilesReaders.isEmpty()) {
+            String input = currentFilesReaders.peek().readLine();
+            if (input == null) {
+                currentFiles.pop();
+                currentFilesReaders.pop().close();
+                return nextLine();
+            } else {
+                return input;
+            }
+        } else {
             return scanner.nextLine();
         }
-
-        String input = null;
-        try {
-            input = currentFilesReaders.peek().readLine();
-        } catch (IOException exc) {
-            exc.printStackTrace();
-        }
-
-        if (input != null) {
-            System.out.println(input);
-            return input;
-        }
-        currentFiles.pop();
-        try {
-            currentFilesReaders.pop().close();
-        } catch (IOException exc) {
-            exc.printStackTrace();
-        }
-        return nextLine();
     }
 
     public void connectToFile(File file) throws IOException, UnsupportedOperationException {
@@ -51,8 +43,7 @@ public class UserInputManager {
             BufferedReader newReader = new BufferedReader(new FileReader(file));
             currentFiles.push(file);
             currentFilesReaders.push(newReader);
-            System.out.println(currentFiles);
         }
-    }
 
+}
 }

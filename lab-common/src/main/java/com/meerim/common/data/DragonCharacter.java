@@ -1,6 +1,8 @@
 package com.meerim.common.data;
 
-public enum DragonCharacter {
+import java.io.Serializable;
+
+public enum DragonCharacter implements Serializable {
     CUNNING,
     EVIL,
     GOOD,
